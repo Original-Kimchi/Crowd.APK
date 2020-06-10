@@ -26,7 +26,7 @@ public class Movement : MonoBehaviour
     {
 		mousePos = Input.mousePosition;
 		mousePos = Camera.main.ScreenToViewportPoint(Input.mousePosition);
-		Debug.Log(mousePos);
+		// Debug.Log(mousePos);
 
 		(var x, var y) = map(mousePos.x, mousePos.y, 0, 0, 1, 1, -1, -1, 1, 1);
 
