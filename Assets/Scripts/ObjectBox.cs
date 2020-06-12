@@ -18,7 +18,7 @@ public static class ObjectBox
         Transform something;
 
         something = Objects.Dequeue();
-
+        something.gameObject.SetActive(true);
         return something;
     }
 }

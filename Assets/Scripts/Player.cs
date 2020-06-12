@@ -5,6 +5,10 @@ using UnityEngine;
 public class Player : MonoBehaviour
 {
     [SerializeField] private int score;
+    private float size = 1;
+    private void Awake()
+    {
+    }
 
     private void OnCollisionEnter(Collision collision)
     {
@@ -17,8 +21,13 @@ public class Player : MonoBehaviour
         else if (collision.gameObject.CompareTag("Player"))
         {
             Player enemy = collision.transform.GetComponent<Player>();
-            if (CheckScore(score))
+            if (enemy.CheckScore(score)) // 상대방 점수보다 높을때,상대방 게임 종료
+            {
+                PointUp(enemy.GetScore());
+                enemy.gameObject.SetActive(false);
+                transform.localScale *= 5f;
                 Debug.Log(gameObject.name + "플레이어가 이김");
+            }
         }
     }
 
@@ -29,7 +38,12 @@ public class Player : MonoBehaviour
 
     public bool CheckScore(int enemyScore)
     {
-        if (score > enemyScore) return true;
+        if (score < enemyScore) return true;
         else return false;
+    }
+
+    public int GetScore()
+    {
+        return score;
     }
 }
