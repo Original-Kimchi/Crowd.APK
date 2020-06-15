@@ -6,6 +6,7 @@ public class Movement : MonoBehaviour
 {
 	[SerializeField] Camera camera;
 	[SerializeField] float speed;
+	private Vector3 normalPos;
 	private Vector3 mousePos;
 
 	public (float x, float y) map(float x, float y, float inMinX, float inMinY,
@@ -27,14 +28,15 @@ public class Movement : MonoBehaviour
 		mousePos = Input.mousePosition;
 		mousePos = Camera.main.ScreenToViewportPoint(Input.mousePosition);
 		// Debug.Log(mousePos);
-
-		(var x, var y) = map(mousePos.x, mousePos.y, 0, 0, 1, 1, -1, -1, 1, 1);
-
-		transform.position += new Vector3(x*speed, 0f, y*speed);
 	}
 
 	private void FixedUpdate()
 	{
+		(var x, var y) = map(mousePos.x, mousePos.y, 0, 0, 1, 1, -1, -1, 1, 1);
+		Debug.Log("x : " + x);
+		Debug.Log("y : " + y);
 
+		normalPos = new Vector3(x, 0f, y).normalized;
+		transform.position += normalPos * speed;
 	}
 }
