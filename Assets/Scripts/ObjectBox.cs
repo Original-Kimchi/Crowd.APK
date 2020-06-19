@@ -4,12 +4,13 @@ using UnityEngine;
 
 public static class ObjectBox
 {
+
     private static Queue<Transform> Objects = new Queue<Transform>();
 
     public static void Enqueue(Transform something)
     {
         Objects.Enqueue(something);
-
+        Debug.Log("들어갔음");
         something.gameObject.SetActive(false);
     }
 

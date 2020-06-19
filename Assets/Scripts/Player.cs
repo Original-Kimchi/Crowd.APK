@@ -14,8 +14,9 @@ public class Player : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("Food"))
         {
-            PointUp(100);
-            ObjectBox.Enqueue(collision.transform);
+            Food food = collision.transform.GetComponent<Food>();
+            PointUp(food.GetScore());
+            ObjectBox.Enqueue(food.transform);
             Debug.Log("사물 처리");
         }
         else if (collision.gameObject.CompareTag("Player"))
