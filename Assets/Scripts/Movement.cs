@@ -33,8 +33,8 @@ public class Movement : MonoBehaviour
 	private void FixedUpdate()
 	{
 		(var x, var y) = map(mousePos.x, mousePos.y, 0, 0, 1, 1, -1, -1, 1, 1);
-		Debug.Log("x : " + x);
-		Debug.Log("y : " + y);
+		// Debug.Log("x : " + x);
+		// Debug.Log("y : " + y);
 
 		normalPos = new Vector3(x, 0f, y).normalized;
 		transform.position += normalPos * speed;

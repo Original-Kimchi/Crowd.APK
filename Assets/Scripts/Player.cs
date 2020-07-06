@@ -24,9 +24,9 @@ public class Player : MonoBehaviour
             Player enemy = collision.transform.GetComponent<Player>();
             if (enemy.CheckScore(score)) // 상대방 점수보다 높을때,상대방 게임 종료
             {
+                StartCoroutine(SizeUp(5));
                 PointUp(enemy.GetScore());
                 enemy.gameObject.SetActive(false);
-                transform.localScale *= 5f;
                 Debug.Log(gameObject.name + "플레이어가 이김");
             }
         }
@@ -46,5 +46,20 @@ public class Player : MonoBehaviour
     public int GetScore()
     {
         return score;
+    }
+
+    private IEnumerator SizeUp(int n)
+    {
+        WaitForEndOfFrame frame = new WaitForEndOfFrame();
+        Debug.Log("SizeUp!");
+        float time = 0;
+        while (time <= 1)
+        {
+
+            transform.localScale *= Mathf.Lerp(1, 1.5f, Time.deltaTime);
+            Debug.Log(time);
+            time += Time.deltaTime;
+            yield return frame;
+        }
     }
 }
