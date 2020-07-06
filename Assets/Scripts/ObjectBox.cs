@@ -10,7 +10,6 @@ public static class ObjectBox
     public static void Enqueue(Transform something)
     {
         Objects.Enqueue(something);
-        Debug.Log("들어갔음");
         something.gameObject.SetActive(false);
     }
 

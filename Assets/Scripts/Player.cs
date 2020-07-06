@@ -51,13 +51,11 @@ public class Player : MonoBehaviour
     private IEnumerator SizeUp(int n)
     {
         WaitForEndOfFrame frame = new WaitForEndOfFrame();
-        Debug.Log("SizeUp!");
         float time = 0;
         while (time <= 1)
         {
 
             transform.localScale *= Mathf.Lerp(1, 1.5f, Time.deltaTime);
-            Debug.Log(time);
             time += Time.deltaTime;
             yield return frame;
         }
