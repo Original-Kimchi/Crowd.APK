@@ -30,6 +30,11 @@ public class Player : MonoBehaviour
                 Debug.Log(gameObject.name + "플레이어가 이김");
             }
         }
+		else if (collision.gameObject.CompareTag("Respawn"))
+		{
+			transform.position += new Vector3(0, 15, 0);
+			Debug.Log("지상으로 재 스폰");
+		}
     }
 
     private void PointUp(int _score)
@@ -55,7 +60,7 @@ public class Player : MonoBehaviour
         while (time <= 1)
         {
 
-            transform.localScale *= Mathf.Lerp(1, 1.5f, Time.deltaTime);
+            transform.localScale *= Mathf.Lerp(1, 1.3f, Time.deltaTime);
             time += Time.deltaTime;
             yield return frame;
         }
