@@ -5,41 +5,43 @@ using UnityEngine.UI;
 public class GameUI : MonoBehaviour
 {
     private Player myPlayer;
+
+    // UI
     [SerializeField] private Text score;
     [SerializeField] private List<string> ranking;
     [SerializeField] private Text timeText;
-    [SerializeField] private Text userID;
+    [SerializeField] private Text playerID;
     [SerializeField] private Transform idBox;
+    private Text[] playerIDList = null;
 
     private float time;
-    private GameObject[] users = null;
-    private Text[] userIDList = null;
+    private GameObject[] players = null;  // Player Objects
     
 
     private void Awake()
     {
-        users = GameObject.FindGameObjectsWithTag("Player");
+        players = GameObject.FindGameObjectsWithTag("Player");
         myPlayer = GameObject.FindGameObjectWithTag("Player").GetComponent<Player>();
     }
 
     private void Start()
     {
-        userIDList = new Text[users.Length];
+        playerIDList = new Text[players.Length];
         time = 100f;
-        for (int i = 0; i < users.Length; i++)
+        for (int i = 0; i < players.Length; i++)
         {
-            userIDList[i] = Instantiate(userID,idBox);
-            userIDList[i].text = users[i].name;
+            playerIDList[i] = Instantiate(playerID,idBox);
+            playerIDList[i].text = players[i].name;
         }
     }
 
     private void Update()
     {
-        for(int i = 0; i < users.Length; i++)
+        for(int i = 0; i < players.Length; i++)
         {
-            if (!users[i].activeSelf)
-                userIDList[i].gameObject.SetActive(false);
-            userIDList[i].transform.position = Camera.main.WorldToScreenPoint(users[i].transform.position) + (Vector3.up * 30f);
+            if (!players[i].activeSelf)
+                playerIDList[i].gameObject.SetActive(false);
+            playerIDList[i].transform.position = Camera.main.WorldToScreenPoint(players[i].transform.position) + (Vector3.up * 30f);
         }
         time -= Time.deltaTime;
         timeText.text = "Time: " + ((int)time).ToString();
