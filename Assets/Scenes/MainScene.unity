@@ -2123,6 +2123,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   score: 0
+  movement: {fileID: 0}
 --- !u!54 &124459664
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -2930,6 +2931,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   score: 0
+  movement: {fileID: 0}
 --- !u!54 &184004928
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -11509,7 +11511,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!108 &705507994
 Light:
   m_ObjectHideFlags: 0
@@ -11566,7 +11568,7 @@ Light:
   m_BounceIntensity: 1
   m_ColorTemperature: 6570
   m_UseColorTemperature: 0
-  m_BoundingSphereOverride: {x: 0, y: 0, z: 0, w: 0}
+  m_BoundingSphereOverride: {x: 0, y: 1.35e-43, z: 3.713e-42, w: 6e-44}
   m_UseBoundingSphereOverride: 0
   m_ShadowRadius: 0
   m_ShadowAngle: 0
@@ -12394,7 +12396,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!108 &753933465
 Light:
   m_ObjectHideFlags: 0
@@ -12451,7 +12453,7 @@ Light:
   m_BounceIntensity: 1
   m_ColorTemperature: 6570
   m_UseColorTemperature: 0
-  m_BoundingSphereOverride: {x: 0, y: 0, z: 0, w: 0}
+  m_BoundingSphereOverride: {x: 0, y: 7.2000003, z: 7.2, w: -8}
   m_UseBoundingSphereOverride: 0
   m_ShadowRadius: 0
   m_ShadowAngle: 0
@@ -19089,6 +19091,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   score: 0
+  movement: {fileID: 0}
 --- !u!54 &1201870322
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -19878,6 +19881,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   score: 0
+  movement: {fileID: 1244724175}
 --- !u!1001 &1247585679
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -23798,6 +23802,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   score: 0
+  movement: {fileID: 0}
 --- !u!54 &1424745814
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -23989,6 +23994,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   score: 0
+  movement: {fileID: 0}
 --- !u!54 &1437976130
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -30773,6 +30779,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   score: 0
+  movement: {fileID: 0}
 --- !u!54 &1762390339
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -30971,7 +30978,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!108 &1766481038
 Light:
   m_ObjectHideFlags: 0
@@ -31028,7 +31035,7 @@ Light:
   m_BounceIntensity: 1
   m_ColorTemperature: 6570
   m_UseColorTemperature: 0
-  m_BoundingSphereOverride: {x: 0, y: 0, z: 0, w: 0}
+  m_BoundingSphereOverride: {x: 6.4, y: 1.5e-44, z: 0, w: 1.25}
   m_UseBoundingSphereOverride: 0
   m_ShadowRadius: 0
   m_ShadowAngle: 0
@@ -35598,6 +35605,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   score: 0
+  movement: {fileID: 0}
 --- !u!54 &2092212117
 Rigidbody:
   m_ObjectHideFlags: 0

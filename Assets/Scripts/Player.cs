@@ -6,9 +6,9 @@ public class Player : MonoBehaviour
 {
     [SerializeField] private int score;
     private float size = 1;
-    private void Awake()
-    {
-    }
+
+	public Movement movement;
+//    private void Awake()    {}
 
     private void OnCollisionEnter(Collision collision)
     {
@@ -25,6 +25,7 @@ public class Player : MonoBehaviour
             if (enemy.CheckScore(score)) // 상대방 점수보다 높을때,상대방 게임 종료
             {
                 StartCoroutine(SizeUp(5));
+				movement.SpeedUp();
                 PointUp(enemy.GetScore());
                 enemy.gameObject.SetActive(false);
                 Debug.Log(gameObject.name + "플레이어가 이김");

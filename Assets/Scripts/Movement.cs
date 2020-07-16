@@ -39,4 +39,8 @@ public class Movement : MonoBehaviour
 		normalPos = new Vector3(x, 0f, y).normalized;
 		transform.position += normalPos * speed;
 	}
+
+	public void SpeedUp() {
+		speed += 0.05f;
+	}
 }
