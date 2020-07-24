@@ -1,4 +1,5 @@
-﻿public class InputMemoryStream
+﻿using System;
+public class InputMemoryStream
 {
     public byte[] buffer { get; private set; }
     public int head { get; private set; }
