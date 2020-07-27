@@ -9,6 +9,8 @@ public class Movement : MonoBehaviour
 	private Vector3 normalPos;
 	private Vector3 mousePos;
 
+	private Vector3 originCameraPos;
+
 	public (float x, float y) map(float x, float y, float inMinX, float inMinY,
 	float inMaxX, float inMaxY, float outMinX, float outMinY, float outMaxX, float outMaxY)
 	{
@@ -18,12 +20,12 @@ public class Movement : MonoBehaviour
 		return (returnX, returnY);
 	}
 
-	void Start()
-    {
-        
-    }
+	private void Awake()
+	{
+		originCameraPos = Camera.main.transform.position;
+	}
 
-    void Update()
+	void Update()
     {
 		mousePos = Input.mousePosition;
 		mousePos = Camera.main.ScreenToViewportPoint(Input.mousePosition);
@@ -38,6 +40,7 @@ public class Movement : MonoBehaviour
 
 		normalPos = new Vector3(x, 0f, y).normalized;
 		transform.position += normalPos * speed;
+		Camera.main.transform.position = transform.position + originCameraPos;
 	}
 
 	public void SpeedUp() {
