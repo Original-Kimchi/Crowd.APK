@@ -4,13 +4,13 @@ using UnityEngine;
 
 public class Food : MonoBehaviour
 {
-    private Game game;
+    private GameManager gameManager;
     private int givingScore = 100;
 
-    private void OnEnable()
+    private void Start()
     {
-        if (game is null) game = Camera.main.GetComponent<Game>();
-        transform.position = game.GetEmptyLocation();
+        if (gameManager is null) gameManager = Camera.main.GetComponent<GameManager>();
+        transform.position = gameManager.GetEmptyLocation();
     }
     public int GetScore()
     {

@@ -8,16 +8,16 @@ public class Player : MonoBehaviour
     private float size = 1;
     
 	public Movement movement;
-    private Game game;
+    private GameManager gameManager;
 
     private void Awake()
     {
-        game = Camera.main.GetComponent<Game>();
+        gameManager = Camera.main.GetComponent<GameManager>();
     }
 
     private void Start()
     {
-        if (game.PlayerObject != gameObject) movement.enabled = false;
+        if (gameManager.MyPlayer.gameObject != gameObject) movement.enabled = false;
     }
 
     private void OnCollisionEnter(Collision collision)
