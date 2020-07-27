@@ -22,6 +22,11 @@ public class FoodRotation : MonoBehaviour
 	private float angleY;
 	private float angleZ;
 
+	private void Start()
+	{
+		StartCoroutine(ChangeRotation());
+	}
+
 	private void Update()
 	{
 		if (x) angleX += (rotationX / timeX) * Time.deltaTime;
@@ -29,5 +34,14 @@ public class FoodRotation : MonoBehaviour
 		if (z) angleZ += (rotationZ / timeZ) * Time.deltaTime;
 
 		transform.localRotation = Quaternion.Euler(angleX, angleY, angleZ);
+	}
+
+	private IEnumerator ChangeRotation()
+	{
+		while (gameObject.activeSelf)
+		{
+			yield return new WaitForSeconds(timeY);
+			rotationY = Random.Range(-180f, 180f);
+		}
 	}
 }

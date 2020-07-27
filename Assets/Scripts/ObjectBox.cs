@@ -6,6 +6,7 @@ public static class ObjectBox
 {
 
     private static Queue<Transform> Objects = new Queue<Transform>();
+    public static bool ObjectExist => Objects.Count != 0;
 
     public static void Enqueue(Transform something)
     {
