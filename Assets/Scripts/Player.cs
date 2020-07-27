@@ -6,9 +6,19 @@ public class Player : MonoBehaviour
 {
     [SerializeField] private int score;
     private float size = 1;
-
+    
 	public Movement movement;
-//    private void Awake()    {}
+    private Game game;
+
+    private void Awake()
+    {
+        game = Camera.main.GetComponent<Game>();
+    }
+
+    private void Start()
+    {
+        if (game.PlayerObject != gameObject) movement.enabled = false;
+    }
 
     private void OnCollisionEnter(Collision collision)
     {
