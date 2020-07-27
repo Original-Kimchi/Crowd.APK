@@ -1,4 +1,6 @@
 ﻿using Photon;
+using System;
+using System.Collections;
 using UnityEngine;
 
 public class PhotonLauncher: PunBehaviour
@@ -16,17 +18,25 @@ public class PhotonLauncher: PunBehaviour
     private readonly int maxPlayers = 4;
 #endif
 
+    private event Action JoinRoomEvent;
+
     private void Awake()
     {
         PhotonNetwork.automaticallySyncScene = true;
+        JoinRoomEvent += () =>
+        {
+            controlPanel.SetActive(false);
+            progressText.SetActive(true);
+        };
+        PhotonNetwork.ConnectUsingSettings("1");
     }
 
-    public void Connect()
+    public void Connect() => StartCoroutine(CoConnect());
+
+    private IEnumerator CoConnect()
     {
-        if (PhotonNetwork.connected)
-            PhotonNetwork.JoinRandomRoom();
-        else
-            PhotonNetwork.ConnectUsingSettings("1");
+        yield return new WaitUntil(() => PhotonNetwork.connectedAndReady);
+        PhotonNetwork.JoinRandomRoom();
     }
 
 #region PUN Callbacks
@@ -45,12 +55,13 @@ public class PhotonLauncher: PunBehaviour
     {
         base.OnPhotonRandomJoinFailed(codeAndMsg);
         Debug.Log($"Launcher/OnPhotonRandomJoinFailed() called by PUN. Now we create room");
-        PhotonNetwork.CreateRoom(null, new RoomOptions { MaxPlayers = 2 }, new TypedLobby());
+        PhotonNetwork.CreateRoom(null, new RoomOptions { MaxPlayers = (byte)maxPlayers }, new TypedLobby());
     }
 
     public override void OnJoinedRoom()
     {
         base.OnJoinedRoom();
+        JoinRoomEvent();
         if(PhotonNetwork.room.PlayerCount == maxPlayers)
             PhotonNetwork.LoadLevel("MainScene");
     }
@@ -58,6 +69,7 @@ public class PhotonLauncher: PunBehaviour
     public override void OnCreatedRoom()
     {
         base.OnCreatedRoom();
+        JoinRoomEvent();
         Debug.Log($"Launcher/OnCreatedRoom() called by PUN.");
     }
 
