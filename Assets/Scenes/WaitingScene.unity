@@ -610,7 +610,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6151d04e89df16040a8e9cfada2e6832, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  controlPanel: {fileID: 508897678}
+  controlPanel: {fileID: 103476460}
   progressText: {fileID: 1153936695}
 --- !u!4 &1281777322
 Transform:
