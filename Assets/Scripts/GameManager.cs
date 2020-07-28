@@ -1,10 +1,11 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 public class GameManager : MonoBehaviour
 {
-    private Player myPlayer;
+    public Player MyPlayer { get; private set; }
 
     // UI
     [SerializeField] private Text score;
@@ -19,12 +20,22 @@ public class GameManager : MonoBehaviour
 
     private float time;
     private GameObject[] players = null;  // Player Objects
-    
+
+    private readonly int mapSize = 500;
 
     private void Awake()
     {
+        MyPlayer = PhotonNetwork.Instantiate("Player", GetEmptyLocation(), Quaternion.identity, 0).GetComponent<Player>();
         players = GameObject.FindGameObjectsWithTag("Player");
-        myPlayer = GameObject.FindGameObjectWithTag("Player").GetComponent<Player>();
+        if (PhotonNetwork.isMasterClient)
+        {
+            foreach (var _ in Enumerable.Range(1, 50))
+            {
+                var go = PhotonNetwork.Instantiate("Food", GetEmptyLocation(), Quaternion.identity, 0);
+                go.AddComponent<Food>();
+                go.AddComponent<FoodRotation>();
+            }
+        }
     }
 
     private void Start()
@@ -40,18 +51,21 @@ public class GameManager : MonoBehaviour
 
     private void Update()
     {
+        while (ObjectBox.ObjectExist)
+            ObjectBox.Dequeue();
+
         for(int i = 0; i < players.Length; i++)
         {
             if (!players[i].activeSelf)
                 playerIDList[i].gameObject.SetActive(false);
             playerIDList[i].transform.position = Camera.main.WorldToScreenPoint(players[i].transform.position) + (Vector3.up * 30f);
-        }
+        } 
         time -= Time.deltaTime * 10;
         if (time <= 0)
             StartCoroutine(GameOver("time"));
 
         timeText.text = "Time: " + ((int)time).ToString();
-        score.text = "Score: " + myPlayer.GetScore().ToString();
+        score.text = "Score: " + MyPlayer.GetScore().ToString();
     }
 
     public IEnumerator GameOver(string result)
@@ -75,5 +89,18 @@ public class GameManager : MonoBehaviour
                 break;
         }
         gameResult.gameObject.SetActive(true);
+    }
+
+    public Vector3 GetEmptyLocation()
+    {
+        while (true)
+        {
+            int x = Random.Range(-mapSize / 2, mapSize / 2);
+            int z = Random.Range(-mapSize / 2, mapSize / 2);
+
+            Physics.Raycast(new Vector3(x, 1 << 5, z), Vector3.down, out RaycastHit hit);
+            if (hit.collider.CompareTag("Floor"))
+                return new Vector3(x, 1, z);
+        }
     }
 }
