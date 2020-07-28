@@ -48,6 +48,12 @@ public class Player : MonoBehaviour
 		}
     }
 
+    private void OnDisable()
+    {
+        // 탈락
+        gameManager.GameOver("gameover");
+    }
+
     private void PointUp(int _score)
     {
         score += _score;

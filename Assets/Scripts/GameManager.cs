@@ -9,24 +9,27 @@ public class GameManager : MonoBehaviour
 
     // UI
     [SerializeField] private Text score;
-    [SerializeField] private List<string> ranking;
+    [SerializeField] private List<Text> ranking;
     [SerializeField] private Text timeText;
     [SerializeField] private Text playerID;
     [SerializeField] private Transform idBox;
     private Text[] playerIDList = null;
     //GameOver
     [SerializeField] private Image gameoverBackground;
-    [SerializeField] private Text gameResult;
+    private Text gameResult;
+    private Text finalScore;
 
     private float time;
-    private GameObject[] players = null;  // Player Objects
+    private GameObject[] playerObjects = null;  // Player Objects
+    private List<Player> players = null;
 
     private readonly int mapSize = 500;
 
     private void Awake()
     {
         MyPlayer = PhotonNetwork.Instantiate("Player", GetEmptyLocation(), Quaternion.identity, 0).GetComponent<Player>();
-        players = GameObject.FindGameObjectsWithTag("Player");
+        gameResult = gameoverBackground.transform.Find("GameResultTxt").GetComponent<Text>();
+        finalScore = gameoverBackground.transform.Find("Score").GetComponent<Text>();
         if (PhotonNetwork.isMasterClient)
         {
             foreach (var _ in Enumerable.Range(1, 50))
@@ -39,12 +42,14 @@ public class GameManager : MonoBehaviour
 
     private void Start()
     {
-        playerIDList = new Text[players.Length];
+        playerObjects = GameObject.FindGameObjectsWithTag("Player");
+        playerIDList = new Text[playerObjects.Length];
         time = 100f;
-        for (int i = 0; i < players.Length; i++)
+        for (int i = 0; i < playerObjects.Length; i++)
         {
             playerIDList[i] = Instantiate(playerID,idBox);
-            playerIDList[i].text = players[i].name;
+            playerIDList[i].text = playerObjects[i].name;
+            players.Add(playerObjects[i].GetComponent<Player>());
         }
     }
 
@@ -53,11 +58,11 @@ public class GameManager : MonoBehaviour
         while (ObjectBox.ObjectExist)
             ObjectBox.Dequeue();
 
-        for(int i = 0; i < players.Length; i++)
+        for(int i = 0; i < playerObjects.Length; i++)
         {
-            if (!players[i].activeSelf)
+            if (!playerObjects[i].activeSelf)
                 playerIDList[i].gameObject.SetActive(false);
-            playerIDList[i].transform.position = Camera.main.WorldToScreenPoint(players[i].transform.position) + (Vector3.up * 30f);
+            playerIDList[i].transform.position = Camera.main.WorldToScreenPoint(playerObjects[i].transform.position) + (Vector3.up * 30f);
         } 
         time -= Time.deltaTime;
         if (time <= 0)
@@ -70,6 +75,7 @@ public class GameManager : MonoBehaviour
     public IEnumerator GameOver(string result)
     {
         WaitForSeconds wait = new WaitForSeconds(2f);
+        finalScore.text = "Score" + MyPlayer.GetScore().ToString();
         gameoverBackground.gameObject.SetActive(true);
         yield return wait;
         switch (result)
@@ -88,6 +94,8 @@ public class GameManager : MonoBehaviour
                 break;
         }
         gameResult.gameObject.SetActive(true);
+        yield return wait;
+        finalScore.gameObject.SetActive(true);
     }
 
     public Vector3 GetEmptyLocation()
@@ -100,6 +108,15 @@ public class GameManager : MonoBehaviour
             Physics.Raycast(new Vector3(x, 1 << 5, z), Vector3.down, out RaycastHit hit);
             if (hit.collider.CompareTag("Floor"))
                 return new Vector3(x, 1, z);
+        }
+    }
+
+    private void Ranking()
+    {
+        players.OrderByDescending(x => x.GetScore());
+        for(int i =0; i < 3; i++)
+        {
+            ranking[i].text = players[i].name + ": " + players[i].GetScore().ToString();
         }
     }
 }

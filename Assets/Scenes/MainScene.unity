@@ -15774,13 +15774,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   score: {fileID: 945856401}
-  ranking: []
+  ranking:
+  - {fileID: 8095066}
+  - {fileID: 1035520364}
+  - {fileID: 682352931}
   timeText: {fileID: 456877033}
   playerID: {fileID: 2859192194950675887, guid: 50148b92a3dd60940993ec8932b761ec,
     type: 3}
   idBox: {fileID: 135178802}
   gameoverBackground: {fileID: 1670023246}
-  gameResult: {fileID: 535592469}
 --- !u!1001 &963713320
 PrefabInstance:
   m_ObjectHideFlags: 0
