@@ -21,7 +21,7 @@ public class GameManager : MonoBehaviour
 
     private float time;
     private GameObject[] playerObjects = null;  // Player Objects
-    private List<Player> players = null;
+    private List<Player> players = new List<Player>();
 
     private readonly int mapSize = 500;
 
@@ -42,12 +42,18 @@ public class GameManager : MonoBehaviour
 
     private void Start()
     {
+        StartCoroutine(CoStart());
+    }
+
+    private IEnumerator CoStart()
+    {
+        yield return new WaitUntil(() => GameObject.FindGameObjectsWithTag("Player").Length == PhotonNetwork.room.MaxPlayers);
         playerObjects = GameObject.FindGameObjectsWithTag("Player");
         playerIDList = new Text[playerObjects.Length];
         time = 100f;
         for (int i = 0; i < playerObjects.Length; i++)
         {
-            playerIDList[i] = Instantiate(playerID,idBox);
+            playerIDList[i] = Instantiate(playerID, idBox);
             playerIDList[i].text = playerObjects[i].name;
             players.Add(playerObjects[i].GetComponent<Player>());
         }
@@ -63,7 +69,10 @@ public class GameManager : MonoBehaviour
             if (!playerObjects[i].activeSelf)
                 playerIDList[i].gameObject.SetActive(false);
             playerIDList[i].transform.position = Camera.main.WorldToScreenPoint(playerObjects[i].transform.position) + (Vector3.up * 30f);
-        } 
+        }
+
+        Ranking();
+
         time -= Time.deltaTime;
         if (time <= 0)
             StartCoroutine(GameOver("time"));
@@ -114,7 +123,7 @@ public class GameManager : MonoBehaviour
     private void Ranking()
     {
         players.OrderByDescending(x => x.GetScore());
-        for(int i =0; i < 3; i++)
+        for(int i =0; i < players.Count; i++)
         {
             ranking[i].text = players[i].name + ": " + players[i].GetScore().ToString();
         }
