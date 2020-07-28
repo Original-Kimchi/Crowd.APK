@@ -7,15 +7,13 @@ public class Food : MonoBehaviour
     private GameManager gameManager;
     private int givingScore = 100;
 
-    private void Start()
-    {
-        if (PhotonNetwork.isMasterClient)
-            if (gameManager is null) gameManager = Camera.main.GetComponent<GameManager>();
-    }
-
     private void OnEnable()
     {
-        if (PhotonNetwork.isMasterClient) transform.position = gameManager.GetEmptyLocation();
+        if (PhotonNetwork.isMasterClient)
+        {
+            if (gameManager is null) gameManager = Camera.main.GetComponent<GameManager>();
+            transform.position = gameManager.GetEmptyLocation();
+        }
     }
 
     public int GetScore()
