@@ -9,9 +9,15 @@ public class Food : MonoBehaviour
 
     private void Start()
     {
-        if (gameManager is null) gameManager = Camera.main.GetComponent<GameManager>();
-        transform.position = gameManager.GetEmptyLocation();
+        if (PhotonNetwork.isMasterClient)
+            if (gameManager is null) gameManager = Camera.main.GetComponent<GameManager>();
     }
+
+    private void OnEnable()
+    {
+        if (PhotonNetwork.isMasterClient) transform.position = gameManager.GetEmptyLocation();
+    }
+
     public int GetScore()
     {
         return givingScore;
