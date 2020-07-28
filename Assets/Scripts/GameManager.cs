@@ -59,7 +59,7 @@ public class GameManager : MonoBehaviour
                 playerIDList[i].gameObject.SetActive(false);
             playerIDList[i].transform.position = Camera.main.WorldToScreenPoint(players[i].transform.position) + (Vector3.up * 30f);
         } 
-        time -= Time.deltaTime * 10;
+        time -= Time.deltaTime;
         if (time <= 0)
             StartCoroutine(GameOver("time"));
 
