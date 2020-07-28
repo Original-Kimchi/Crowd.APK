@@ -32,7 +32,6 @@ public class GameManager : MonoBehaviour
             foreach (var _ in Enumerable.Range(1, 50))
             {
                 var go = PhotonNetwork.Instantiate("Food", GetEmptyLocation(), Quaternion.identity, 0);
-                go.AddComponent<Food>();
                 go.AddComponent<FoodRotation>();
             }
         }
