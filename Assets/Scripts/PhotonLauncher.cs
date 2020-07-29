@@ -22,6 +22,9 @@ public class PhotonLauncher: PunBehaviour
 
     private void Awake()
     {
+#if UNITY_STANDALONE
+        Screen.SetResolution(720, 1280, false);
+#endif
         PhotonNetwork.automaticallySyncScene = true;
         JoinRoomEvent += () =>
         {
