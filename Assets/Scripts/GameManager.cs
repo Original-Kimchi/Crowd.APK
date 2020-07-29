@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 public class GameManager : MonoBehaviour
 {
@@ -127,5 +128,11 @@ public class GameManager : MonoBehaviour
         {
             ranking[i].text = players[i].name + ": " + players[i].GetScore().ToString();
         }
+    }
+
+    public void GoToMainScene()
+    {
+        PhotonNetwork.LeaveRoom();
+        SceneManager.LoadScene("WaitingScene");
     }
 }
