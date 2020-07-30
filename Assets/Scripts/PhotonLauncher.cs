@@ -2,6 +2,7 @@
 using System;
 using System.Collections;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class PhotonLauncher: PunBehaviour
 {
@@ -9,6 +10,7 @@ public class PhotonLauncher: PunBehaviour
 
     [SerializeField] private GameObject controlPanel;
     [SerializeField] private GameObject progressText;
+    [SerializeField] private InputField nameInputField;
 
     #endregion
 
@@ -32,9 +34,17 @@ public class PhotonLauncher: PunBehaviour
             progressText.SetActive(true);
         };
         PhotonNetwork.ConnectUsingSettings("1");
+
+        nameInputField.text = PlayerPrefs.HasKey("Name") ? PlayerPrefs.GetString("Name") : "Player";
     }
 
-    public void Connect() => StartCoroutine(CoConnect());
+    public void Connect()
+    {
+        if (string.IsNullOrEmpty(nameInputField.text))
+            return;
+        PhotonNetwork.player.NickName = nameInputField.text;
+        StartCoroutine(CoConnect());
+    }
 
     private IEnumerator CoConnect()
     {
