@@ -9,7 +9,7 @@ public class Joystick : MonoBehaviour, IPointerDownHandler, IDragHandler, IPoint
 	public RectTransform rectJoystick;
 	public float m_fSpeed = 5.0f;
 	public float m_fSqr = 0f;
-	public GameObject player;
+	public Player player;
 
 	private float m_fRadius;
 	

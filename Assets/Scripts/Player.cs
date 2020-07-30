@@ -10,9 +10,10 @@ public class Player : MonoBehaviour, IPunObservable
     
     public int PlayerId { get; private set; }
     
-	public Movement movement;
+	// public Movement movement;
     private GameManager gameManager;
-
+    private Vector3 originCamPos;
+    private bool isMyPlayer;
     private void Awake()
     {
         gameManager = Camera.main.GetComponent<GameManager>();
@@ -21,7 +22,17 @@ public class Player : MonoBehaviour, IPunObservable
 
     private void Start()
     {
-        if (gameManager.MyPlayer.gameObject != gameObject) movement.enabled = false;
+        if (gameManager.MyPlayer.gameObject == gameObject)
+        {
+            originCamPos = Camera.main.transform.position;
+            isMyPlayer = true;
+        }
+        //if (gameManager.MyPlayer.gameObject != gameObject) movement.enabled = false;
+    }
+    private void Update()
+    {
+        if(isMyPlayer)
+            Camera.main.transform.position = transform.position + originCamPos;
     }
 
     private void OnCollisionEnter(Collision collision)
@@ -43,7 +54,7 @@ public class Player : MonoBehaviour, IPunObservable
                 if (enemy.CheckScore(score)) // 상대방 점수보다 높을때,상대방 게임 종료
                 {
                     StartCoroutine(SizeUp(5));
-                    movement.SpeedUp();
+                    // movement.SpeedUp();
                     PointUp(enemy.GetScore());
                     enemy.gameObject.SetActive(false);
                     Debug.Log(gameObject.name + "플레이어가 이김");
@@ -60,7 +71,7 @@ public class Player : MonoBehaviour, IPunObservable
     private void OnDisable()
     {
         // 탈락
-        gameManager.GameOver("gameover");
+        StartCoroutine(gameManager.GameOver("gameover"));
     }
 
     private void PointUp(int _score)

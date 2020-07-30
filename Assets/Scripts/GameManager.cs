@@ -6,9 +6,11 @@ using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 public class GameManager : MonoBehaviour
 {
+    private string[] CharactorType = { "Alpaca", "Cat", "Chilck", "Chicken", "Dog", "Goat", "Horse", "Pig", "Rabbit", "Sheep" };
     public Player MyPlayer { get; private set; }
 
     // UI
+    [SerializeField] private Joystick joystick;
     [SerializeField] private Text score;
     [SerializeField] private List<Text> ranking;
     [SerializeField] private Text timeText;
@@ -28,9 +30,12 @@ public class GameManager : MonoBehaviour
 
     private void Awake()
     {
-        MyPlayer = PhotonNetwork.Instantiate("Player", GetEmptyLocation(), Quaternion.identity, 0).GetComponent<Player>();
+        joystick = GameObject.Find("UI/Panel/Joystick").GetComponent<Joystick>();
+        var n = Random.Range(0, 9);
+        MyPlayer = PhotonNetwork.Instantiate(CharactorType[n], GetEmptyLocation(), Quaternion.identity, 0).GetComponent<Player>();
         gameResult = gameoverBackground.transform.Find("GameResultTxt").GetComponent<Text>();
         finalScore = gameoverBackground.transform.Find("Score").GetComponent<Text>();
+        joystick.player = MyPlayer;
         if (PhotonNetwork.isMasterClient)
         {
             foreach (var _ in Enumerable.Range(1, 50))
@@ -85,7 +90,7 @@ public class GameManager : MonoBehaviour
     public IEnumerator GameOver(string result)
     {
         WaitForSeconds wait = new WaitForSeconds(2f);
-        finalScore.text = "Score" + PhotonNetwork.player.GetScore().ToString();
+        finalScore.text = "Score: " + PhotonNetwork.player.GetScore().ToString();
         gameoverBackground.gameObject.SetActive(true);
         yield return wait;
         switch (result)

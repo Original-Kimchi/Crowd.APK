@@ -6,11 +6,11 @@ using UnityEngine.UI;
 public class PlayerMotion : MonoBehaviour
 {
 	public Joystick fSqr;
-	public Text text;
 	private Animator animator;
 
     void Start()
     {
+        fSqr = GameObject.Find("UI/Panel/Joystick").GetComponent<Joystick>();
 		animator = gameObject.GetComponent<Animator>();
     }
 
@@ -19,20 +19,8 @@ public class PlayerMotion : MonoBehaviour
     {
 		Debug.Log(fSqr.m_fSqr);
 		
-		if (fSqr.m_fSqr < 0.33f)
-		{
-			animator.SetInteger("animation", 0);
-			text.text = "Idle";
-		}
-		else if (fSqr.m_fSqr < 0.66f)
-		{
-			animator.SetInteger("animation", 1);
-			text.text = "Walk";
-		}
-		else
-		{
-			animator.SetInteger("animation", 2);
-			text.text = "Run";
-		}
+		if (fSqr.m_fSqr < 0.33f) animator.SetInteger("animation", 0);
+		else if (fSqr.m_fSqr < 0.66f) animator.SetInteger("animation", 1);
+		else animator.SetInteger("animation", 2);
     }
 }
