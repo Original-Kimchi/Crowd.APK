@@ -79,13 +79,13 @@ public class GameManager : MonoBehaviour
             StartCoroutine(GameOver("time"));
 
         timeText.text = "Time: " + ((int)time).ToString();
-        score.text = "Score: " + MyPlayer.GetScore().ToString();
+        score.text = "Score: " + PhotonNetwork.player.GetScore().ToString();
     }
 
     public IEnumerator GameOver(string result)
     {
         WaitForSeconds wait = new WaitForSeconds(2f);
-        finalScore.text = "Score" + MyPlayer.GetScore().ToString();
+        finalScore.text = "Score" + PhotonNetwork.player.GetScore().ToString();
         gameoverBackground.gameObject.SetActive(true);
         yield return wait;
         switch (result)
@@ -123,16 +123,18 @@ public class GameManager : MonoBehaviour
 
     private void Ranking()
     {
-        players.OrderByDescending(x => x.GetScore());
+        var playerList = PhotonNetwork.playerList.ToList();
+        players.OrderByDescending(x => playerList.Find(p=>p.ID==x.PlayerId).GetScore());
         for(int i =0; i < players.Count; i++)
         {
-            ranking[i].text = players[i].name + ": " + players[i].GetScore().ToString();
+            ranking[i].text = playerList.Find(p=>p.ID==players[i].PlayerId).NickName + ": " + playerList.Find(p => p.ID == players[i].PlayerId).GetScore();
         }
     }
 
     public void GoToMainScene()
     {
-        PhotonNetwork.LeaveRoom();
         SceneManager.LoadScene("WaitingScene");
+        PhotonNetwork.LeaveRoom();
+        PhotonNetwork.LeaveLobby();
     }
 }
