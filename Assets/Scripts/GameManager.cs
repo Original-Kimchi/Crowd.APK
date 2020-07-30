@@ -79,13 +79,13 @@ public class GameManager : MonoBehaviour
             StartCoroutine(GameOver("time"));
 
         timeText.text = "Time: " + ((int)time).ToString();
-        score.text = "Score: " + MyPlayer.GetScore().ToString();
+        score.text = "Score: " + PhotonNetwork.player.GetScore().ToString();
     }
 
     public IEnumerator GameOver(string result)
     {
         WaitForSeconds wait = new WaitForSeconds(2f);
-        finalScore.text = "Score" + MyPlayer.GetScore().ToString();
+        finalScore.text = "Score" + PhotonNetwork.player.GetScore().ToString();
         gameoverBackground.gameObject.SetActive(true);
         yield return wait;
         switch (result)
