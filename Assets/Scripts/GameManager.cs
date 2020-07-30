@@ -51,7 +51,7 @@ public class GameManager : MonoBehaviour
         StartCoroutine(CoStart());
     }
 
-    private IEnumerator CoStart()
+    private IEnumerator CoStart()   
     {
         yield return new WaitUntil(() => GameObject.FindGameObjectsWithTag("Player").Length == PhotonNetwork.room.MaxPlayers);
         playerObjects = GameObject.FindGameObjectsWithTag("Player");
@@ -60,8 +60,10 @@ public class GameManager : MonoBehaviour
         for (int i = 0; i < playerObjects.Length; i++)
         {
             playerIDList[i] = Instantiate(playerID, idBox);
-            playerIDList[i].text = playerObjects[i].name;
-            players.Add(playerObjects[i].GetComponent<Player>());
+
+            var player = playerObjects[i].GetComponent<Player>();
+            playerIDList[i].text = PhotonNetwork.playerList.ToList().Find(p => p.ID == player.PlayerId).NickName;
+            players.Add(player);
         }
     }
 
