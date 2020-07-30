@@ -1,11 +1,14 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
-public class Player : MonoBehaviour
+public class Player : MonoBehaviour, IPunObservable
 {
     [SerializeField] private int score;
     private float size = 1;
+    
+    public int PlayerId { get; private set; }
     
 	public Movement movement;
     private GameManager gameManager;
@@ -13,6 +16,7 @@ public class Player : MonoBehaviour
     private void Awake()
     {
         gameManager = Camera.main.GetComponent<GameManager>();
+        PlayerId = PhotonNetwork.player.ID;
     }
 
     private void Start()
@@ -22,30 +26,35 @@ public class Player : MonoBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
-        if (collision.gameObject.CompareTag("Food"))
+        if (PhotonNetwork.isMasterClient)
         {
-            Food food = collision.transform.GetComponent<Food>();
-            PointUp(food.GetScore());
-            ObjectBox.Enqueue(food.transform);
-            Debug.Log("사물 처리");
-        }
-        else if (collision.gameObject.CompareTag("Player"))
-        {
-            Player enemy = collision.transform.GetComponent<Player>();
-            if (enemy.CheckScore(score)) // 상대방 점수보다 높을때,상대방 게임 종료
+            if (collision.gameObject.CompareTag("Food"))
             {
-                StartCoroutine(SizeUp(5));
-				movement.SpeedUp();
-                PointUp(enemy.GetScore());
-                enemy.gameObject.SetActive(false);
-                Debug.Log(gameObject.name + "플레이어가 이김");
+                Food food = collision.transform.GetComponent<Food>();
+                PointUp(food.GetScore());
+                var player = PhotonNetwork.playerList.ToList().Find(p => p.ID == PlayerId);
+                player.SetScore(player.GetScore() + food.GetScore());
+                ObjectBox.Enqueue(food.transform);
+                Debug.Log("사물 처리");
+            }
+            else if (collision.gameObject.CompareTag("Player"))
+            {
+                Player enemy = collision.transform.GetComponent<Player>();
+                if (enemy.CheckScore(score)) // 상대방 점수보다 높을때,상대방 게임 종료
+                {
+                    StartCoroutine(SizeUp(5));
+                    movement.SpeedUp();
+                    PointUp(enemy.GetScore());
+                    enemy.gameObject.SetActive(false);
+                    Debug.Log(gameObject.name + "플레이어가 이김");
+                }
+            }
+            else if (collision.gameObject.CompareTag("Respawn"))
+            {
+                transform.position += new Vector3(0, 15, 0);
+                Debug.Log("지상으로 재 스폰");
             }
         }
-		else if (collision.gameObject.CompareTag("Respawn"))
-		{
-			transform.position += new Vector3(0, 15, 0);
-			Debug.Log("지상으로 재 스폰");
-		}
     }
 
     private void OnDisable()
@@ -81,5 +90,13 @@ public class Player : MonoBehaviour
             time += Time.deltaTime;
             yield return frame;
         }
+    }
+
+    public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
+    {
+        if (stream.isWriting)
+            stream.SendNext(PlayerId);
+        else
+            PlayerId = (int)stream.ReceiveNext();
     }
 }
