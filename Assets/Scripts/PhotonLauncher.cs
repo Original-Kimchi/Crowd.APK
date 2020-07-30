@@ -43,6 +43,7 @@ public class PhotonLauncher: PunBehaviour
         if (string.IsNullOrEmpty(nameInputField.text))
             return;
         PhotonNetwork.player.NickName = nameInputField.text;
+        PlayerPrefs.SetString("Name", nameInputField.text);
         StartCoroutine(CoConnect());
     }
 
