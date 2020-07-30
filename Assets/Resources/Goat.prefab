@@ -352,6 +352,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   fSqr: {fileID: 0}
+  text: {fileID: 0}
 --- !u!114 &-3235719680299519609
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -403,6 +404,7 @@ MonoBehaviour:
   ObservedComponents:
   - {fileID: 218639093343412043}
   - {fileID: 5224609428488721622}
+  - {fileID: -3235719680299519609}
   ObservedComponentsFoldoutOpen: 1
   viewIdField: 0
   instantiationId: -1
