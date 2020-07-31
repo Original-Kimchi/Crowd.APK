@@ -26,7 +26,7 @@ public class GameManager : MonoBehaviour
     private GameObject[] playerObjects = null;  // Player Objects
     private List<Player> players = new List<Player>();
 
-    private readonly int mapSize = 500;
+    private readonly int mapSize = 300;
 
     private void Awake()
     {
