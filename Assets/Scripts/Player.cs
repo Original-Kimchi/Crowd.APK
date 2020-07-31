@@ -70,8 +70,8 @@ public class Player : MonoBehaviour, IPunObservable
 
     private void OnDisable()
     {
-        // 탈락
-        StartCoroutine(gameManager.GameOver("gameover"));
+        if(isMyPlayer)
+            StartCoroutine(gameManager.GameOver("gameover"));
     }
 
     private void PointUp(int _score)
