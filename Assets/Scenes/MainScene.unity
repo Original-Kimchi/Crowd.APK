@@ -12215,7 +12215,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   rectJoyback: {fileID: 725655196}
   rectJoystick: {fileID: 1144969472}
-  m_fSpeed: 10
+  m_fSpeed: 50
   m_fSqr: 0
   player: {fileID: 0}
 --- !u!114 &725655198
