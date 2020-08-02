@@ -3,19 +3,20 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-public class Player : MonoBehaviour, IPunObservable
+public class Player : PhotonViewObject, IPunObservable
 {
     [SerializeField] private int score;
     private float size = 1;
     
     public int PlayerId { get; private set; }
-    
+
 	// public Movement movement;
     private GameManager gameManager;
     private Vector3 originCamPos;
     private bool isMyPlayer;
     private void Awake()
     {
+        base.Awake();
         gameManager = Camera.main.GetComponent<GameManager>();
         PlayerId = PhotonNetwork.player.ID;
     }
@@ -39,13 +40,14 @@ public class Player : MonoBehaviour, IPunObservable
     {
         if (PhotonNetwork.isMasterClient)
         {
+            var playerList = PhotonNetwork.playerList.ToList();
             if (collision.gameObject.CompareTag("Food"))
             {
                 Food food = collision.transform.GetComponent<Food>();
                 PointUp(food.GetScore());
-                var player = PhotonNetwork.playerList.ToList().Find(p => p.ID == PlayerId);
-                player.SetScore(player.GetScore() + food.GetScore());
-                ObjectBox.Enqueue(food.transform);
+                var player = playerList.Find(p => p.ID == PlayerId);
+                player.AddScore(food.GetScore());
+                food.transform.position = gameManager.GetEmptyLocation();
                 Debug.Log("사물 처리");
             }
             else if (collision.gameObject.CompareTag("Player"))
@@ -56,7 +58,9 @@ public class Player : MonoBehaviour, IPunObservable
                     StartCoroutine(SizeUp(5));
                     // movement.SpeedUp();
                     PointUp(enemy.GetScore());
-                    enemy.gameObject.SetActive(false);
+                    var enemyPlayer = playerList.Find(p => p.ID == enemy.PlayerId);
+                    playerList.Find(p => p.ID == PlayerId).AddScore(enemyPlayer.GetScore());
+                    enemy.PhotonView.RPC(nameof(GameOver), enemyPlayer);
                     Debug.Log(gameObject.name + "플레이어가 이김");
                 }
             }
@@ -109,5 +113,12 @@ public class Player : MonoBehaviour, IPunObservable
             stream.SendNext(PlayerId);
         else
             PlayerId = (int)stream.ReceiveNext();
+    }
+
+    [PunRPC]
+    public void GameOver()
+    {
+        gameManager.StartCoroutine(gameManager.GameOver("gameover"));
+        PhotonNetwork.Destroy(gameObject);
     }
 }

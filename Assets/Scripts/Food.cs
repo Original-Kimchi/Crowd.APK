@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Food : MonoBehaviour
+public class Food : PhotonViewObject
 {
     private GameManager gameManager;
     private int givingScore = 100;

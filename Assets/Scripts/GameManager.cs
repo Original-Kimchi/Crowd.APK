@@ -6,7 +6,7 @@ using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 public class GameManager : MonoBehaviour
 {
-    private string[] CharactorType = { "Alpaca", "Cat", "Chilck", "Chicken", "Dog", "Goat", "Horse", "Pig", "Rabbit", "Sheep" };
+    private string[] CharactorType = { "Alpaca", "Cat", "Chick", "Chicken", "Dog", "Goat", "Horse", "Pig", "Rabbit", "Sheep" };
     public Player MyPlayer { get; private set; }
 
     // UI
@@ -27,6 +27,8 @@ public class GameManager : MonoBehaviour
     private List<Player> players = new List<Player>();
 
     private readonly int mapSize = 300;
+
+    private bool gameEnded;
 
     private void Awake()
     {
@@ -69,28 +71,30 @@ public class GameManager : MonoBehaviour
 
     private void Update()
     {
-        while (ObjectBox.ObjectExist)
-            ObjectBox.Dequeue();
-
-        for(int i = 0; i < playerObjects.Length; i++)
+        if (!gameEnded)
         {
-            if (!playerObjects[i].activeSelf)
-                playerIDList[i].gameObject.SetActive(false);
-            playerIDList[i].transform.position = Camera.main.WorldToScreenPoint(playerObjects[i].transform.position) + (Vector3.up * 30f);
+            for (int i = 0; i < playerObjects.Length; i++)
+            {
+                if (playerObjects[i] is null)
+                        playerIDList[i].gameObject.SetActive(false);
+                else
+                    playerIDList[i].transform.position = Camera.main.WorldToScreenPoint(playerObjects[i].transform.position) + (Vector3.up * 30f);
+            }
+
+            Ranking();
+
+            time -= Time.deltaTime;
+            if (time <= 0)
+                StartCoroutine(GameOver("time"));
+
+            timeText.text = "Time: " + ((int)time).ToString();
+            score.text = "Score: " + PhotonNetwork.player.GetScore().ToString();
         }
-
-        Ranking();
-
-        time -= Time.deltaTime;
-        if (time <= 0)
-            StartCoroutine(GameOver("time"));
-
-        timeText.text = "Time: " + ((int)time).ToString();
-        score.text = "Score: " + PhotonNetwork.player.GetScore().ToString();
     }
 
     public IEnumerator GameOver(string result)
     {
+        gameEnded = true;
         WaitForSeconds wait = new WaitForSeconds(2f);
         finalScore.text = "Score: " + PhotonNetwork.player.GetScore().ToString();
         gameoverBackground.gameObject.SetActive(true);
@@ -140,8 +144,8 @@ public class GameManager : MonoBehaviour
 
     public void GoToMainScene()
     {
-        SceneManager.LoadScene("WaitingScene");
         PhotonNetwork.LeaveRoom();
         PhotonNetwork.LeaveLobby();
+        SceneManager.LoadScene("WaitingScene");
     }
 }
