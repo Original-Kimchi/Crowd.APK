@@ -75,7 +75,7 @@ public class GameManager : MonoBehaviour
         {
             for (int i = 0; i < playerObjects.Length; i++)
             {
-                if (playerObjects[i] is null)
+                if (playerObjects[i] == null)
                         playerIDList[i].gameObject.SetActive(false);
                 else
                     playerIDList[i].transform.position = Camera.main.WorldToScreenPoint(playerObjects[i].transform.position) + (Vector3.up * 30f);
@@ -94,7 +94,6 @@ public class GameManager : MonoBehaviour
 
     public IEnumerator GameOver(string result)
     {
-        gameEnded = true;
         WaitForSeconds wait = new WaitForSeconds(2f);
         finalScore.text = "Score: " + PhotonNetwork.player.GetScore().ToString();
         gameoverBackground.gameObject.SetActive(true);
@@ -144,8 +143,7 @@ public class GameManager : MonoBehaviour
 
     public void GoToMainScene()
     {
+        gameEnded = true;
         PhotonNetwork.LeaveRoom();
-        PhotonNetwork.LeaveLobby();
-        SceneManager.LoadScene("WaitingScene");
     }
 }
