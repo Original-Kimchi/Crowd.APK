@@ -28,6 +28,9 @@ public class PhotonLauncher: PunBehaviour
         Screen.SetResolution(720, 1280, false);
 #endif
         PhotonNetwork.automaticallySyncScene = true;
+
+        DontDestroyOnLoad(gameObject);
+
         JoinRoomEvent += () =>
         {
             controlPanel.SetActive(false);
@@ -100,5 +103,11 @@ public class PhotonLauncher: PunBehaviour
     {
         base.OnPhotonPlayerDisconnected(otherPlayer);
     }
-#endregion
+
+    public override void OnLeftRoom()
+    {
+        base.OnLeftRoom();
+        PhotonNetwork.LoadLevel("WaitingScene");
+    }
+    #endregion
 }
