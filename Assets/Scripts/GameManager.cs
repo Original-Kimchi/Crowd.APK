@@ -1,10 +1,11 @@
-﻿using System.Collections;
+﻿using Photon;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 using UnityEngine.UI;
-public class GameManager : MonoBehaviour
+
+public class GameManager : PunBehaviour
 {
     private string[] CharactorType = { "Alpaca", "Cat", "Chick", "Chicken", "Dog", "Goat", "Horse", "Pig", "Rabbit", "Sheep" };
     public Player MyPlayer { get; private set; }
@@ -58,7 +59,11 @@ public class GameManager : MonoBehaviour
         yield return new WaitUntil(() => GameObject.FindGameObjectsWithTag("Player").Length == PhotonNetwork.room.MaxPlayers);
         playerObjects = GameObject.FindGameObjectsWithTag("Player");
         playerIDList = new Text[playerObjects.Length];
+#if UNITY_STANDALONE
+        time = 1f;
+#else
         time = 100f;
+#endif
         for (int i = 0; i < playerObjects.Length; i++)
         {
             playerIDList[i] = Instantiate(playerID, idBox);
@@ -147,4 +152,14 @@ public class GameManager : MonoBehaviour
         PhotonNetwork.player.SetScore(0);
         PhotonNetwork.LeaveRoom();
     }
+
+#region Photon Callbacks
+
+    public override void OnLeftRoom()
+    {
+        base.OnLeftRoom();
+        PhotonNetwork.LoadLevel("WaitingScene");
+    }
+
+#endregion
 }
