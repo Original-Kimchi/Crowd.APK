@@ -23,7 +23,6 @@ public class GameManager : PunBehaviour
     private Text gameResult;
     private Text finalScore;
 
-    private float time;
     private GameObject[] playerObjects = null;  // Player Objects
     private List<Player> players = new List<Player>();
 
@@ -52,6 +51,7 @@ public class GameManager : PunBehaviour
     private void Start()
     {
         StartCoroutine(CoStart());
+        StartCoroutine(TimeCheck());
     }
 
     private IEnumerator CoStart()   
@@ -59,11 +59,7 @@ public class GameManager : PunBehaviour
         yield return new WaitUntil(() => GameObject.FindGameObjectsWithTag("Player").Length == PhotonNetwork.room.MaxPlayers);
         playerObjects = GameObject.FindGameObjectsWithTag("Player");
         playerIDList = new Text[playerObjects.Length];
-#if UNITY_STANDALONE
-        time = 1f;
-#else
-        time = 100f;
-#endif
+
         for (int i = 0; i < playerObjects.Length; i++)
         {
             playerIDList[i] = Instantiate(playerID, idBox);
@@ -74,7 +70,20 @@ public class GameManager : PunBehaviour
         }
     }
 
-    private void Update()
+    private IEnumerator TimeCheck()
+    {
+        float time = 100;
+        WaitForSeconds seconds = new WaitForSeconds(1f);
+        while(time > 0)
+        {
+            yield return seconds;
+            time--;
+            timeText.text = "Time: " + ((int)time).ToString();
+        }
+        StartCoroutine(GameOver("time"));
+    }
+
+    private void FixedUpdate()
     {
         if (!gameEnded)
         {
@@ -87,12 +96,6 @@ public class GameManager : PunBehaviour
             }
 
             Ranking();
-
-            time -= Time.deltaTime;
-            if (time <= 0)
-                StartCoroutine(GameOver("time"));
-
-            timeText.text = "Time: " + ((int)time).ToString();
             score.text = "Score: " + PhotonNetwork.player.GetScore().ToString();
         }
     }
