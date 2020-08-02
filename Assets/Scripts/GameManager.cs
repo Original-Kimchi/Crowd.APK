@@ -144,6 +144,7 @@ public class GameManager : MonoBehaviour
     public void GoToMainScene()
     {
         gameEnded = true;
+        PhotonNetwork.player.SetScore(0);
         PhotonNetwork.LeaveRoom();
     }
 }
