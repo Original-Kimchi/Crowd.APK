@@ -142,10 +142,14 @@ public class GameManager : PunBehaviour
     private void Ranking()
     {
         var playerList = PhotonNetwork.playerList.ToList();
-        players.OrderByDescending(x => playerList.Find(p=>p.ID==x.PlayerId).GetScore());
-        for(int i =0; i < players.Count; i++)
+        var playerListTemp = from player in playerList orderby player.GetScore() descending select player;
+        var enumerator = playerListTemp.GetEnumerator();
+        enumerator.MoveNext();
+
+        for (int i = 0; i < playerList.Count; i++)
         {
-            ranking[i].text = playerList.Find(p=>p.ID==players[i].PlayerId).NickName + ": " + playerList.Find(p => p.ID == players[i].PlayerId).GetScore();
+            ranking[i].text = enumerator.Current.NickName + ": " + enumerator.Current.GetScore();
+            enumerator.MoveNext();
         }
     }
 
