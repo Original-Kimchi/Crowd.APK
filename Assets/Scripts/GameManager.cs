@@ -59,11 +59,8 @@ public class GameManager : PunBehaviour
         yield return new WaitUntil(() => GameObject.FindGameObjectsWithTag("Player").Length == PhotonNetwork.room.MaxPlayers);
         playerObjects = GameObject.FindGameObjectsWithTag("Player");
         playerIDList = new Text[playerObjects.Length];
-#if UNITY_STANDALONE
-        time = 1f;
-#else
         time = 100f;
-#endif
+
         for (int i = 0; i < playerObjects.Length; i++)
         {
             playerIDList[i] = Instantiate(playerID, idBox);
@@ -139,10 +136,14 @@ public class GameManager : PunBehaviour
     private void Ranking()
     {
         var playerList = PhotonNetwork.playerList.ToList();
-        players.OrderByDescending(x => playerList.Find(p=>p.ID==x.PlayerId).GetScore());
-        for(int i =0; i < players.Count; i++)
+        var playerListTemp = from player in playerList orderby player.GetScore() descending select player;
+        var enumerator = playerListTemp.GetEnumerator();
+        enumerator.MoveNext();
+
+        for (int i = 0; i < playerList.Count; i++)
         {
-            ranking[i].text = playerList.Find(p=>p.ID==players[i].PlayerId).NickName + ": " + playerList.Find(p => p.ID == players[i].PlayerId).GetScore();
+            ranking[i].text = enumerator.Current.NickName + ": " + enumerator.Current.GetScore();
+            enumerator.MoveNext();
         }
     }
 
